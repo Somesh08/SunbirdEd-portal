@@ -24,6 +24,8 @@ let PERMISSIONS_HELPER = {
   setUserSessionData (reqObj, body) {
     try {
       if (body.responseCode === 'OK') {
+       var identifier = body.result.response.channel;
+       process.env.identifier = identifier;
         reqObj.session.userId = body.result.response.identifier;
         reqObj.session.userName = body.result.response.userName;
         if (body.result.response.managedBy) {
