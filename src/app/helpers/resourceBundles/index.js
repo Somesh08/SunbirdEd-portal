@@ -69,19 +69,11 @@ module.exports = function(express) {
     var router = express.Router()
     router.get('/read/:lang?', compression(), (requestObj, responseObj, next) => {
         var lang = requestObj.params['lang'] || envHelper.sunbird_default_language
-        var identifier = process.env.identifier;
-        console.log("identifier", identifier);
-
-
         try {
-            if (identifier != '' && identifier != undefined) {
-                var bundles = JSON.parse(fs.readFileSync(path.join(__dirname, '/./../../resourceBundles_1/jsonPath/', identifier, lang + '.json')))
-                console.log("bundles", bundles);
-                sendSuccessResponse(responseObj, 'api.resoucebundles.read', bundles, HttpStatus.OK)
-            } else {
-                var bundles = JSON.parse(fs.readFileSync(path.join(__dirname, '/./../../resourceBundles_1/jsonPath/default.json')))
-                sendSuccessResponse(responseObj, 'api.resoucebundles.read', bundles, HttpStatus.OK)
-            }
+            var bundles = JSON.parse(fs.readFileSync(path.join(__dirname, '/./../../resourceBundles/json/', lang + '.json')))
+            sendSuccessResponse(responseObj, 'api.resoucebundles.read', bundles, HttpStatus.OK)
+
+
         } catch (err) {
             if (err.code === 'ENOENT') {
                 sendErrorResponse(responseObj, 'api.resoucebundles.read', '', 404)
@@ -92,7 +84,9 @@ module.exports = function(express) {
     })
     router.get('/readLang/:lang?', compression(), (requestObj, responseObj, next) => {
         var lang = requestObj.params['lang'] || envHelper.sunbird_default_language
-        console.log(lang);
+
+
+
         try {
             var bundles = JSON.parse(fs.readFileSync(path.join(__dirname, '/./../../resourcebundles/json/', lang + '.json')))
             sendSuccessResponse(responseObj, 'api.resoucebundles.read', bundles, HttpStatus.OK)
